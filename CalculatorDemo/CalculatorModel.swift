@@ -29,26 +29,6 @@ class CalculatorModel {
         "√": Operation.UniaryOperation(sqrt),
         "±": Operation.UniaryOperation({-$0}),
         "%": Operation.UniaryOperation({$0*0.01}),
-        "sin": Operation.UniaryOperation(sin),
-        "cos": Operation.UniaryOperation(cos),
-        "tan": Operation.UniaryOperation(tan),
-        "sinh": Operation.UniaryOperation(sinh),
-        "cosh": Operation.UniaryOperation(cosh),
-        "tanh": Operation.UniaryOperation(tanh),
-//        "x!": Operation.UniaryOperationAnyObj({(num) -> AnyObject in
-//            if num < 0 || floor(num) != num {
-//                return "Error" as AnyObject
-//            } else if num == 0 {
-//                return 1 as AnyObject
-//            }
-//            
-//            var result = num
-//            while result > 0 {
-//                result *= result - 1
-//                result -= 1
-//            }
-//            return result as AnyObject
-//        }),
     ]
     
     
@@ -58,7 +38,6 @@ class CalculatorModel {
         // in fact, optionals ARE enums
         case Constant(Double)
         case UniaryOperation((Double)->Double)
-        case FailableUniaryOperation((Double)->AnyObject)
         case BinaryOperation((Double, Double)->Double)
         case Equals
     }
@@ -70,7 +49,6 @@ class CalculatorModel {
             switch interpretedOperation {
             case .Constant(let associatedValue): accumulator = associatedValue
             case .UniaryOperation(let function): accumulator = function(accumulator)
-            case .FailableUniaryOperation(let function): result = function(accumulator)
             case .BinaryOperation(let function): pending = PendingBinary(binaryFunction: function, firstNum: accumulator)
             case .Equals:
                 if pending != nil {
@@ -79,7 +57,6 @@ class CalculatorModel {
                 }
             }
         }
-        
 //        if let constant = operations[symbol] {
 //            accmulator = constant
 //        }
